@@ -5,5 +5,6 @@ from django.views.generic import TemplateView
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^$', TemplateView.as_view(template_name='datareturn/home.html')),
+    url(r'^$', TemplateView.as_view(template_name='datareturn/home.html'), name='home'),
+    url(r'^account/', include('allauth.urls')),
 ]

@@ -9,11 +9,11 @@
     <title>{% block head_title %}Data Return{% endblock %}</title>
 
     <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap-theme.min.css' %}">
+    <script src="{% static 'vendor/js/bootstrap.min.js' %}"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -55,7 +55,7 @@
 
     <div class="body-main">
       <div class="container">
-        {% block main %}{% endblock %}
+        {% block content %}{% endblock %}
       </div>
     </div>
   </body>
