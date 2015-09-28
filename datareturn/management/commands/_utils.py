@@ -1,21 +1,38 @@
 import re
 
 from allauth.account.models import EmailAddress
-from allauth.utils import generate_unique_username
 from django.contrib.auth import get_user_model
 
 
-def new_user(email, first_name='', last_name=''):
-    usernamebase = [x for x in [email, first_name, last_name] if x]
-    username = generate_unique_username(usernamebase)
-    usermodel = get_user_model()
-    if usermodel.objects.filter(email=email):
+def is_username_unique(username):
+    User = get_user_model()
+    try:
+        User.objects.get(username__iexact=username)
+        return False
+    except User.DoesNotExist:
+        return True
+    return False
+
+
+def make_unique_username(basename):
+    username = basename
+    i = 1
+    while not is_username_unique(username):
+        i += 1
+        username = basename + str(i)
+    return username
+
+
+def new_user(email, username=''):
+    User = get_user_model()
+    if username:
+        assert is_username_unique(username)
+    else:
+        basename = email.split('@')[0]
+        username = make_unique_username(basename)
+    if User.objects.filter(email=email):
         raise ValueError('Email "{}" not unique.'.format(email))
-    user = usermodel(username=username, email=email)
-    if first_name:
-        user.first_name = first_name
-    if last_name:
-        user.last_name = last_name
+    user = User(username=username, email=email)
     user.save()
 
     # Set up email for allauth.

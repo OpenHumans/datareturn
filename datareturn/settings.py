@@ -102,6 +102,9 @@ USE_TZ = True
 # Sites required by django-allauth
 SITE_ID = 1
 
+# File storage on S3.
+DEFAULT_FILE_STORAGE = 'datareturn.models.PrivateStorage'
+
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
