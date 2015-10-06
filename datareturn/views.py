@@ -46,7 +46,18 @@ class TokenLoginView(TemplateView):
         return HttpResponseRedirect(failed_login_url)
 
 
-class UserTokensView(View):
+class UserTokensView(TemplateView):
+    """
+    Link to a CSV containing user emails and freshly generated tokens.
+    """
+    template_name = 'admin/user_tokens.html'
+
+    @method_decorator(staff_member_required)
+    def get(self, request, *args, **kwargs):
+        return super(UserTokensView, self).get(request, *args, **kwargs)
+
+
+class UserTokensCSVView(View):
     """
     Return a CSV containing user emails and freshly generated tokens.
     """
@@ -65,7 +76,13 @@ class UserTokensView(View):
 
     @method_decorator(staff_member_required)
     def get(self, request, *args, **kwargs):
-        # Create the HttpResponse object with the appropriate CSV header.
+        """
+        Return CSV file. Lists users (emails) and a fresh set of login tokens.
+
+        The resulting file is named "datareturn_user_tokens_{DATETIME}.csv"
+        where the [DATETIME] section is date and time in ISO 8601 basic format.
+        """
+        # Add the appropriate CSV header.
         response = HttpResponse(content_type='text/csv')
         datetimestamp = datetime.datetime.now().strftime('%y%m%dT%H%m%S')
         response['Content-Disposition'] = (

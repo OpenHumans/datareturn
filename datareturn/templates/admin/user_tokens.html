@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>
+  Click here to download user tokens:
+</p>
+<p>
+  <a href="{% url 'admin_user_tokens_csv' %}">User tokens CSV</a>
+</p>
+{% endblock %}
