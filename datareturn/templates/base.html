@@ -41,13 +41,16 @@
             <span class="icon-bar"></span>
           </button>
 
-          <a class="navbar-brand" href="/">Data Return</a>
+          <a class="navbar-brand" href="/">Data Return{% if user.is_authenticated %}: <small>{{ user.email }}</small>{% endif %}</a>
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-main-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class=""><a href="#">ItemA</a></li>
-            <li class=""><a href="#">ItemB</a></li>
+            {% if user.is_authenticated %}
+            <li class=""><a href="{% url 'account_logout' %}">Log out</a></li>
+            {% else %}
+            <li class=""><a href="{% url 'account_reset_password'%}">Request new login link</a><li>
+            {% endif %}
           </ul>
         </div>
       </div>

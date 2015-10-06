@@ -14,7 +14,9 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='datareturn/home.html'),
         name='home'),
     url(r'^account/', include('allauth.urls')),
-    url(r'^token_login/(?P<uidb64>[0-9A-Za-z_\-]+)/'
-        r'(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+    url(r"^token_login/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$",
         TokenLoginView.as_view(), name='token_login'),
+    url(r'^token_login_fail/?$',
+        TemplateView.as_view(template_name='datareturn/token_login_fail.html'),
+        name='token_login_fail'),
 ]

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p class="lead">
+  Sorry, this login link is no longer valid. Login links become invalid after
+  you log in, and they expire after three days.
+</p>
+<p class="lead">
+  <a href="{% url 'account_reset_password' %}">Click here to request a new login link.</a>
+</p>
+{% endblock %}

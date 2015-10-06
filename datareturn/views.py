@@ -1,6 +1,9 @@
 import csv
 import datetime
 
+from allauth.account.utils import user_pk_to_url_str, url_str_to_user_pk
+
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.tokens import default_token_generator
@@ -26,23 +29,23 @@ class TokenLoginView(TemplateView):
 
     template_name = 'datareturn/token_login.html'
 
-    def _get_user(self, uidb64):
+    def _get_user(self, uidb36):
         User = get_user_model()
         try:
-            pk = urlsafe_base64_decode(uidb64)
+            pk = url_str_to_user_pk(uidb36)
             return User.objects.get(pk=pk)
         except (ValueError, User.DoesNotExist):
             return None
 
     def dispatch(self, request, *args, **kwargs):
-        uidb64 = kwargs['uidb64']
+        uidb36 = kwargs['uidb36']
         token = kwargs['token']
-        self.reset_user = self._get_user(uidb64)
+        self.reset_user = self._get_user(uidb36)
         user = authenticate(username=self.reset_user, token=token)
         if user:
             login(request, user)
             return super(TokenLoginView, self).dispatch(request, *args, **kwargs)
-        failed_login_url = reverse('home')
+        failed_login_url = reverse('token_login_fail')
         return HttpResponseRedirect(failed_login_url)
 
 
@@ -69,9 +72,12 @@ class UserTokensCSVView(View):
                 users_with_data.append(data_file.user)
         users_and_tokens = []
         for user in users_with_data:
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
-            users_and_tokens.append([user, uid + '/' + token])
+            login_path = reverse('token_login',
+                                 kwargs={'uidb36': user_pk_to_url_str(user),
+                                         'token': token})
+            login_url = self.request.build_absolute_uri(login_path)
+            users_and_tokens.append([user, login_url])
         return users_and_tokens
 
     @method_decorator(staff_member_required)

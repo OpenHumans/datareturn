@@ -12,7 +12,8 @@ Individuals are managed according to their email addresses. The email is what th
 * Add an admin account for yourself with `python manage.py add_admin youremail@example.com yourpassword`
 * Follow instructions for ["Loading files into S3"](https://github.com/PersonalGenomesOrg/datareturn#loading-files-into-s3)
 * Create user accounts with associated files (these are based on the S3 contents) by running: `foreman run python manage.py load_files`
-* You can download a CSV listing your users (by email address) and a fresh set of associated login tokens by visiting `/admin/user_tokens`.
+* You can download a CSV listing your users (by email address) and a fresh set of associated login tokens by visiting `/admin/user_tokens`. This is useful for sending
+out an email notifying these individuals of their new accounts and data.
 
 ### Loading files into S3
 
