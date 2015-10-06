@@ -5,7 +5,15 @@ Individuals are managed according to their email addresses. The email is what th
 
 ## Admin set up
 
-### Load files into S3
+* Use `virtualenv` and install requirements with pip (`pip install requirements.txt`).
+* Have `foreman` installed. Foreman is used to load environment variables, which is how you'll store your private AWS keys.
+* Migrations: `python manage.py migrate`
+* Set up the Site object using `set_site` command. For example: `python manage.py set_site mysite.example.com 'My Site Name'`
+* Add an admin account for yourself with `python manage.py add_admin youremail@example.com yourpassword`
+* Follow instructions for ["Loading files into S3"](https://github.com/PersonalGenomesOrg/datareturn#loading-files-into-s3)
+* Create user accounts with associated files (these are based on the S3 contents) by running: `foreman run python manage.py load_files`
+
+### Loading files into S3
 
 * Copy `env.example` to `.env` and add info needed for using AWS S3
 * Create a CSV format document with these features [(see example)](https://github.com/PersonalGenomesOrg/datareturn/blob/master/example/examplelist.csv):
@@ -21,4 +29,6 @@ and data in the ["exampledata" directory](https://github.com/PersonalGenomesOrg/
 * `foreman run python scripts/load_data.py example/examplelist.csv --localpath example/exampledata`
 
 ...results in the S3 file loaded with this key:
-* `youruser@example.com/photo.jpg`
+* `datareturn/youruser@example.com/photo.jpg`
+
+### 
