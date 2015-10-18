@@ -18,6 +18,17 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('datafile', models.FileField(storage=datareturn.models.MyS3BotoStorage(querystring_expire=600, querystring_auth=True, acl=b'private'), upload_to=b'')),
+                ('description', models.TextField(default=b'')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='DataLink',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('url', models.TextField(default=b'')),
+                ('name', models.TextField(default=b'')),
+                ('description', models.TextField(default=b'')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),

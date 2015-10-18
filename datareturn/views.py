@@ -19,15 +19,13 @@ from datareturn.models import DataFile
 User = get_user_model()
 
 
-class TokenLoginView(TemplateView):
+class TokenLoginView(View):
     """
     Log in a user using the reset token as authentication.
 
     Tokens are invalidated after being used, and expire after 3 days.
     (Expiration time can be altered with settings.PASSWORD_RESET_TIMEOUT_DAYS.)
     """
-
-    template_name = 'datareturn/token_login.html'
 
     def _get_user(self, uidb36):
         User = get_user_model()
@@ -44,9 +42,19 @@ class TokenLoginView(TemplateView):
         user = authenticate(username=self.reset_user, token=token)
         if user:
             login(request, user)
-            return super(TokenLoginView, self).dispatch(request, *args, **kwargs)
+            login_url = reverse('home')
+            return HttpResponseRedirect(login_url)
         failed_login_url = reverse('token_login_fail')
         return HttpResponseRedirect(failed_login_url)
+
+
+class HomeView(TemplateView):
+    template_name = 'datareturn/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        context['user'] = 'foobar'
+        return context
 
 
 class UserTokensView(TemplateView):

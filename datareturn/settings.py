@@ -104,8 +104,11 @@ USE_TZ = True
 # Sites required by django-allauth
 SITE_ID = 1
 
-# File storage on S3.
+# File storage on S3 and AWS credentials.
 DEFAULT_FILE_STORAGE = 'datareturn.models.PrivateStorage'
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_S3_STORAGE_BUCKET_NAME')
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'

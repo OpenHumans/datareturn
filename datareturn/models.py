@@ -18,6 +18,17 @@ class DataFile(models.Model):
         storage=MyS3BotoStorage(acl='private',
                                 querystring_auth=True,
                                 querystring_expire=600))
+    description = models.TextField(default='')
 
     def __unicode__(self):
-        return self.datafile.name
+        return ':'.join([self.user.email, self.datafile.name])
+
+
+class DataLink(models.Model):
+    user = models.ForeignKey(User)
+    url = models.TextField(default='')
+    name = models.TextField(default='')
+    description = models.TextField(default='')
+
+    def __unicode__(self):
+        return ':'.join([self.user.email, self.name])

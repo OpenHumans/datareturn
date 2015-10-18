@@ -1,1 +1,2 @@
-youruser@example.com,local,12345/camera.jpg,photo.jpg
+youruser@example.com,file,12345/camera.jpg,photo.jpg,"An example photo of a camera, loaded directly to S3."
+youruser@example.com,link,https://upload.wikimedia.org/wikipedia/commons/b/bb/Broad_chain_closeup.jpg,"Wikipedia image of a chain","An example item added as a link."

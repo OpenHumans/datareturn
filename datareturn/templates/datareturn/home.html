@@ -1,7 +1,88 @@
 {% extends 'base.html' %}
 
+{% load home_extras %}
+
 {% block content %}
+{% if user.is_authenticated %}
+
+  {% if user.is_staff %}
+    <p>
+      Hello staff.
+    </p>
+
+  {# Not staff. #}
+  {% else %}
+    <p><b>Account: {{ user.email }}</b></p>
+    {% if user.datafile_set.all %}
+    <hr>
+    <h4>Data files</h4>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for datafile in user.datafile_set.all %}
+        <tr>
+          <td>
+            <a href="{{ datafile.datafile.url }}">
+              {{ datafile.datafile.name|basename }}
+            </a>
+          </td>
+          <td>
+            {{ datafile.description }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    {% if user.datalink_set.all %}
+    <hr>
+    <h4>Data links</h4>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Link</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for datalink in user.datalink_set.all %}
+        <tr>
+          <td>
+            <a href="{{ datalink.url }}">
+              {{ datalink.name }}
+            </a>
+          </td>
+          <td>
+            {{ datalink.description }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    {% if not user.datafile_set.all and not user.datalink_set.all %}
+      <p>
+        Sorry, no data seems to be loaded to this account!
+      </p>
+    {% endif %}
+  {% endif %}
+
+{# Not authenticated. #}
+{% else %}
 <p>
-  Hello world.
+  Welcome to our data return site.
+<p>If we've returned data to you, you can access it by logging in
+  <a href="{$ url 'account_password_reset' %}">with a login link</a>.
 </p>
+<a class="btn btn-lg btn-primary" href="{% url 'account_reset_password' %}"
+    style="margin-top:10px">
+  Get a login link</a>
+
+{% endif %}
+
 {% endblock %}
