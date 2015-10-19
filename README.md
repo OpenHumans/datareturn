@@ -26,17 +26,25 @@ out an email notifying these individuals of their new accounts and data.
 * Copy `env.example` to `.env` and add info needed for using AWS S3
 * Create a CSV format document with these features [(see example)](https://github.com/PersonalGenomesOrg/datareturn/blob/master/example/examplelist.csv):
   * No header
-  * First column: Individual's email address
-  * Second column: `local` (currently only option)
-  * Third column: Local path to the file
-  * Fourth column: Name to give the file in S3 and on the site
-* To load these files onte S3, use foreman to run `scripts/load_files.py`, e.g.: `foreman run python scripts/load_files.py FILELIST.CSV --localpath FILE/PATH/`
+  * **Column 1: Recipient.**<br>The recipient's email address.
+  * **Column 2: Type.**<br>There are two different types of data return: `file` or `link`.
+  * **Column 3: Path to file.**
+    * for `link`: URL to return.
+    * for `file`: local file that will be loaded onto S3.<br>
+    _(Note: the version of this file uploaded onto S3 will have this
+      field replaced with the S3 key name.)_
+  * **Column 4: Name.**
+    * for `file`: the basename to use for the file on S3.
+    * for `link`: a name to use when displaying the link.
+  * **Column 5: Description.**<br>Description of this item.
+* To load these files onte S3, use foreman to run `scripts/load_files.py`, e.g.:<br>`foreman run python scripts/load_files.py FILELIST.CSV --localpath FILE/PATH/`
 
 For example, running the following in the project's base directory (which uses the example list ["examplelist.csv"](https://github.com/PersonalGenomesOrg/datareturn/blob/master/example/examplelist.csv)
 and data in the ["exampledata" directory](https://github.com/PersonalGenomesOrg/datareturn/tree/master/example/exampledata/):
 * `foreman run python scripts/load_files.py example/examplelist.csv --localpath example/exampledata`
 
-...results in the S3 file loaded with this key:
-* `datareturn/862f0de367ce252edd509bd25a3505c91d0e145a/photo.jpg`
+...results in:
+*  an S3 file loaded with the key `datareturn/862f0de367ce252edd509bd25a3505c91d0e145a/photo.jpg`
+* a slightly modified version of `examplelist.csv` loaded to S3 with the key ``datareturn_info.csv``
 
 ###

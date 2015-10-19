@@ -30,7 +30,7 @@ def load_data(user, filedata):
         print item
         if item[1] == 'file':
             data_file = DataFile(user=user)
-            data_file.datafile.name = item[3]
+            data_file.datafile.name = item[2]
             data_file.description = item[4]
             data_file.save()
         elif item[1] == 'link':

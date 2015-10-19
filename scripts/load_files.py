@@ -58,7 +58,7 @@ def load_local(file_list, local_filedir, bucket):
         s3_path = os.path.join('datareturn', hashfile(filepath), fileinfo[3])
         key = bucket.new_key(s3_path)
         key.set_contents_from_filename(filepath)
-        fileinfo[3] = s3_path
+        fileinfo[2] = s3_path
         list_update_csv.writerow(fileinfo)
     return list_update.getvalue()
 
