@@ -2,8 +2,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from datareturn.views import (HomeView, TokenLoginView, UserTokensView,
-                              UserTokensCSVView)
+from datareturn.views import TokenLoginView, UserTokensView, UserTokensCSVView
 
 urlpatterns = [
     url(r'^admin/user_tokens/?$', UserTokensView.as_view(),
@@ -14,7 +13,6 @@ urlpatterns = [
 
     url(r'^$',
         TemplateView.as_view(template_name='datareturn/home.html'),
-        # HomeView.as_view(),
         name='home'),
     url(r'^account/', include('allauth.urls')),
     url(r"^token_login/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$",

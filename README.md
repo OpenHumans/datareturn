@@ -5,11 +5,17 @@ Individuals are managed according to their email addresses. The email is what th
 
 ## Admin set up
 
-* Use `virtualenv` and install requirements with pip (`pip install requirements.txt`).
-* Have `foreman` installed. Foreman is used to load environment variables, which is how you'll store your private AWS keys.
+* Use `virtualenv` and install requirements with pip
+(`pip install requirements.txt`).
+* Have `foreman` installed. Foreman is used to load environment variables,
+which is how you'll store your private AWS keys.
 * Migrations: `python manage.py migrate`
-* Set up the Site object using `set_site` command. For example: `python manage.py set_site mysite.example.com 'My Site Name'`
-* Add an admin account for yourself with `python manage.py add_admin youremail@example.com yourpassword`
+* Use 'createsuperuser' to create a new admin account for yourself with
+`python manage.py createsuperuser`
+* Use this account to log in to the admin site at `/admin`. Edit the "Site"
+object so the "domain name" and "display name" are the names you would like to
+use for this site. Create a "SiteConfig" object for the "Site" object and enter
+the associated information.
 * Follow instructions for ["Loading files into S3"](https://github.com/PersonalGenomesOrg/datareturn#loading-files-into-s3)
 * Create user accounts with associated data by running: `foreman run python manage.py load_data`
 * You can download a CSV listing your users (by email address) and a fresh set of associated login tokens by visiting `/admin/user_tokens`. This is useful for sending

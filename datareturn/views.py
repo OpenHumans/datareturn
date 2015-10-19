@@ -48,15 +48,6 @@ class TokenLoginView(View):
         return HttpResponseRedirect(failed_login_url)
 
 
-class HomeView(TemplateView):
-    template_name = 'datareturn/home.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(HomeView, self).get_context_data(**kwargs)
-        context['user'] = 'foobar'
-        return context
-
-
 class UserTokensView(TemplateView):
     """
     Link to a CSV containing user emails and freshly generated tokens.

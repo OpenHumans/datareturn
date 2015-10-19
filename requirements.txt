@@ -2,7 +2,9 @@ Django==1.8.4
 argparse==1.2.1
 boto==2.38.0
 django-allauth==0.23.0
+django-markdown-deux==1.0.5
 django-storages==1.1.8
+markdown2==2.3.0
 oauthlib==1.0.3
 python-openid==2.2.5
 requests==2.7.0

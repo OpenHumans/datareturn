@@ -33,7 +33,7 @@ INSTALLED_APPS = (
     # Third party apps
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
+    'markdown_deux',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -69,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # We use Sites and associated config to customize templates.
+                'datareturn.context_processors.site',
             ],
         },
     },
@@ -101,7 +103,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Sites required by django-allauth
+# Sites required by django-allauth.
 SITE_ID = 1
 
 # File storage on S3 and AWS credentials.

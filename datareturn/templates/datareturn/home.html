@@ -1,18 +1,24 @@
 {% extends 'base.html' %}
 
 {% load home_extras %}
+{% load markdown_deux_tags %}
 
 {% block content %}
 {% if user.is_authenticated %}
+  <p><b>Account: {{ user.email }}</b></p>
 
   {% if user.is_staff %}
     <p>
-      Hello staff.
+      This is an admin account.
     </p>
 
+    <a class="btn btn-primary"
+        href="{% url 'admin:index' %}">
+      Go to admin page
+    </a>
   {# Not staff. #}
   {% else %}
-    <p><b>Account: {{ user.email }}</b></p>
+    <p>{{ site.siteconfig.data_page_explanation|markdown }}</p>
     {% if user.datafile_set.all %}
     <hr>
     <h4>Data files</h4>
@@ -77,7 +83,7 @@
 <p>
   Welcome to our data return site.
 <p>If we've returned data to you, you can access it by logging in
-  <a href="{$ url 'account_password_reset' %}">with a login link</a>.
+  <a href="{% url 'account_reset_password' %}">with a login link</a>.
 </p>
 <a class="btn btn-lg btn-primary" href="{% url 'account_reset_password' %}"
     style="margin-top:10px">
