@@ -106,6 +106,9 @@ USE_TZ = True
 # Sites required by django-allauth.
 SITE_ID = 1
 
+# Open Humans base URL. Defaults to main site, can be changed for dev purposes.
+OPEN_HUMANS_SERVER = os.getenv('OPEN_HUMANS_SERVER', 'https://openhumans.org')
+
 # File storage on S3 and AWS credentials.
 DEFAULT_FILE_STORAGE = 'datareturn.models.PrivateStorage'
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')

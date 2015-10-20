@@ -2,9 +2,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from datareturn.views import TokenLoginView, UserTokensView, UserTokensCSVView
+from datareturn.views import (AuthorizeOpenHumansView, TokenLoginView,
+                              UserTokensView, UserTokensCSVView)
 
 urlpatterns = [
+    # Redirect URI for completing Open Humans OAuth2 data export process.
+    url(r'^open_humans_complete/$', AuthorizeOpenHumansView.as_view()),
+
     url(r'^admin/user_tokens/?$', UserTokensView.as_view(),
         name='admin_user_tokens'),
     url(r'^admin/user_tokens_csv/?$', UserTokensCSVView.as_view(),

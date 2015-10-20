@@ -34,6 +34,27 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='OpenHumansConfig',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('client_id', models.CharField(max_length=255)),
+                ('client_secret', models.CharField(max_length=255)),
+                ('source_name', models.CharField(max_length=255)),
+                ('site', models.OneToOneField(to='sites.Site')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='OpenHumansUser',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('openhumans_userid', models.PositiveIntegerField(null=True)),
+                ('access_token', models.CharField(max_length=60, blank=True)),
+                ('refresh_token', models.CharField(max_length=60, blank=True)),
+                ('token_expiration', models.DateTimeField(null=True)),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
             name='SiteConfig',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),

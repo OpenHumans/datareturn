@@ -19,6 +19,9 @@
   {# Not staff. #}
   {% else %}
     <p>{{ site.siteconfig.data_page_explanation|markdown }}</p>
+    <a href="{{ site.openhumansconfig.auth_url }}">
+      Export data to Open Humans
+    </a>
     {% if user.datafile_set.all %}
     <hr>
     <h4>Data files</h4>
