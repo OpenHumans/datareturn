@@ -3,6 +3,7 @@ import datetime
 
 from allauth.account.utils import user_pk_to_url_str, url_str_to_user_pk
 
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
@@ -30,9 +31,9 @@ class TokenLoginView(View):
     """
 
     def _get_user(self, uidb36):
-        User = get_user_model()
         try:
             pk = url_str_to_user_pk(uidb36)
+
             return User.objects.get(pk=pk)
         except (ValueError, User.DoesNotExist):
             return None
@@ -109,38 +110,44 @@ class AuthorizeOpenHumansView(RedirectView):
     @staticmethod
     def _exchange_code(code):
         site = Site.objects.get_current()
+
         token_response = requests.post(
             site.openhumansconfig.token_url,
             data={
-                'grant_type': 'authorization_code',
                 'code': code,
-                'redirect_uri': site.openhumansconfig.redirect_uri,
-            },
-            auth=requests.auth.HTTPBasicAuth(
-                site.openhumansconfig.client_id,
-                site.openhumansconfig.client_secret
-            )
-        )
+                'client_id': settings.OPEN_HUMANS_CLIENT_ID,
+                'client_secret': settings.OPEN_HUMANS_CLIENT_SECRET,
+                'grant_type': 'authorization_code',
+                'redirect_uri': settings.OPEN_HUMANS_REDIRECT_URI,
+            })
+
         return token_response.json()
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         if 'code' in request.GET:
             token_data = self._exchange_code(request.GET['code'])
-            ohuser, _ = OpenHumansUser.get_or_create(user=request.user)
+
+            ohuser, _ = OpenHumansUser.objects.get_or_create(user=request.user)
+
             ohuser.access_token = token_data['access_token']
             ohuser.refresh_token = token_data['refresh_token']
+
             ohuser.token_expiration = (
                 datetime.datetime.now() +
                 datetime.timedelta(seconds=token_data['expires_in']))
+
             ohuser.save()
+
             messages.success(request, 'Open Humans connection completed.')
 
             # TODO: Push data to Open Humans.
 
             site = Site.objects.get_current()
+
             return HttpResponseRedirect(site.openhumansconfig.return_url)
-        else:
-            messages.error(request, 'Failed to connect Open Humans!')
-            return super(AuthorizeOpenHumansView, self).get(
-                request, *args, **kwargs)
+
+        messages.error(request, 'Failed to connect Open Humans!')
+
+        return super(AuthorizeOpenHumansView, self).get(
+            request, *args, **kwargs)

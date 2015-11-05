@@ -107,7 +107,12 @@ USE_TZ = True
 SITE_ID = 1
 
 # Open Humans base URL. Defaults to main site, can be changed for dev purposes.
-OPEN_HUMANS_SERVER = os.getenv('OPEN_HUMANS_SERVER', 'https://openhumans.org')
+OPEN_HUMANS_SERVER = os.getenv('OPEN_HUMANS_SERVER', 'https://www.openhumans.org')
+
+OPEN_HUMANS_REDIRECT_URI = os.getenv('OPEN_HUMANS_REDIRECT_URI')
+
+OPEN_HUMANS_CLIENT_ID = os.getenv('OPEN_HUMANS_CLIENT_ID')
+OPEN_HUMANS_CLIENT_SECRET = os.getenv('OPEN_HUMANS_CLIENT_SECRET')
 
 # File storage on S3 and AWS credentials.
 DEFAULT_FILE_STORAGE = 'datareturn.models.PrivateStorage'
