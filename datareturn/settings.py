@@ -2,6 +2,11 @@ import os
 
 from django.conf import global_settings
 
+from env_tools import apply_env
+
+
+# Apply the environment variables in the .env file.
+apply_env()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -9,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&)llt@-%7vq&9&y@(^idxnv3zoz*n^t=#irh$v-d%hq6=^1#2i'
+SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = []
@@ -82,13 +87,14 @@ WSGI_APPLICATION = 'datareturn.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+
+# Parse database configuration from $DATABASE_URL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -123,6 +129,7 @@ AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_S3_STORAGE_BUCKET_NAME')
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATIC_ROOT = 'staticfiles'
 
 # Settings for django-allauth and account interactions.
 ACCOUNT_EMAIL_REQUIRED = True
@@ -130,3 +137,27 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = 'home'
+
+############################################################
+# Heroku settings
+if os.getenv('HEROKU_SETUP') in ['true', 'True']:
+    # Parse database configuration from $DATABASE_URL
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config()
+    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # Allow all host headers
+    ALLOWED_HOSTS = ['*']
+
+# Email set up.
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', global_settings.EMAIL_BACKEND)
+if os.getenv('EMAIL_USE_TLS') in ['true', 'True']:
+    EMAIL_USE_TLS = True
+else:
+    EMAIL_USE_TLS = global_settings.EMAIL_USE_TLS
+EMAIL_HOST = os.getenv('EMAIL_HOST', global_settings.EMAIL_HOST)
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', global_settings.EMAIL_HOST_USER)
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD',
+                                global_settings.EMAIL_HOST_PASSWORD)
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', str(global_settings.EMAIL_PORT)))
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', global_settings.DEFAULT_FROM_EMAIL)
