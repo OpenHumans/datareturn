@@ -62,7 +62,8 @@ class OpenHumansConfig(models.Model):
     def auth_url(self):
         return (settings.OPEN_HUMANS_SERVER +
                 '/oauth2/authorize?client_id={}&response_type=code'.format(
-                    settings.OPEN_HUMANS_CLIENT_ID))
+                    settings.OPEN_HUMANS_CLIENT_ID) +
+                '&scope=wildlife%20read%20write')
 
     @property
     def return_url(self):
