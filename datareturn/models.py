@@ -45,7 +45,6 @@ class SiteConfig(models.Model):
     Site configuration, customize with additional information and descriptions.
     """
     site = models.OneToOneField(Site)
-    source_name = models.CharField(max_length=40)
     data_page_explanation = models.TextField(default='')
 
 
