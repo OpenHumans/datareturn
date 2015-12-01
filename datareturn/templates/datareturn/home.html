@@ -19,9 +19,6 @@
   {# Not staff. #}
   {% else %}
     <p>{{ site.siteconfig.data_page_explanation|markdown }}</p>
-    <a href="{{ site.openhumansconfig.auth_url }}">
-      Export data to Open Humans
-    </a>
     {% if user.datafile_set.all %}
     <hr>
     <h4>Data files</h4>
@@ -78,6 +75,16 @@
       <p>
         Sorry, no data seems to be loaded to this account!
       </p>
+    {% else %}
+      <hr>
+      <h4>Export to Open Humans</h4>
+      <p>
+        Click the link below to start the data export process to an Open
+        Humans account.
+      </p>
+      <a href="{{ site.openhumansconfig.auth_url }}">
+        Export data to Open Humans
+      </a>
     {% endif %}
   {% endif %}
 
