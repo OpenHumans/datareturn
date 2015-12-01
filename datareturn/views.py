@@ -144,9 +144,7 @@ class AuthorizeOpenHumansView(RedirectView):
             requests.patch(
                 site.openhumansconfig.userdata_url,
                 data=json.dumps({
-                    'data': {
-                        'file-label': 'url-goes-here'
-                    }
+                    'data': ohuser.create_exported_data(),
                 }),
                 headers={'Content-type': 'application/json',
                          'Authorization':

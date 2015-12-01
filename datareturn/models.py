@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -41,6 +42,10 @@ class DataFile(models.Model):
                                 querystring_auth=True,
                                 querystring_expire=600))
     description = models.TextField(default='')
+
+    @property
+    def basename(self):
+        return os.path.basename(self.datafile.name)
 
     def __unicode__(self):
         return ':'.join([self.user.email, self.datafile.name])
@@ -164,6 +169,23 @@ class OpenHumansUser(models.Model):
         except UnauthorizedTokenError:
             return False
         return False
+
+    def create_exported_data(self):
+        """
+        Return dict containing data to be exported to Open Humans 'data' field.
+        """
+        data = {}
+        files = DataFile.objects.filter(user=self.user)
+        links = DataLink.objects.filter(user=self.user)
+        if files:
+            data['files'] = {}
+            for datafile in files:
+                data['files'][datafile.basename] = datafile.datafile.storage.longterm_url(datafile.datafile.name)
+        if links:
+            data['links'] = {}
+            for datalink in links:
+                data['links'][datalink.name] = datalink.url
+        return data
 
     def __unicode__(self):
         return '{} OpenHumans:{}'.format(self.user.email,

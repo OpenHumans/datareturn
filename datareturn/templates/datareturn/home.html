@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-{% load home_extras %}
 {% load markdown_deux_tags %}
 
 {% block content %}
@@ -34,7 +33,7 @@
         <tr>
           <td>
             <a href="{{ datafile.datafile.url }}">
-              {{ datafile.datafile.name|basename }}
+              {{ datafile.basename }}
             </a>
           </td>
           <td>
