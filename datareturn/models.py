@@ -19,7 +19,19 @@ class UnauthorizedTokenError(Exception):
 
 @deconstructible
 class MyS3BotoStorage(S3BotoStorage):
-    pass
+    """
+    Adds custom method to create "long term URL" w/permission lasting a year.
+    """
+    def longterm_url(self, name):
+        name = self._normalize_name(self._clean_name(name))
+        if self.custom_domain:
+            return "%s://%s/%s" % ('https' if self.secure_urls else 'http',
+                                   self.custom_domain, name)
+        else:
+            return self.connection.generate_url(
+                31540000, method='GET', bucket=self.bucket.name,
+                key=self._encode_name(name), query_auth=self.querystring_auth,
+                force_http=not self.secure_urls)
 
 
 class DataFile(models.Model):
