@@ -76,8 +76,12 @@
         Sorry, no data seems to be loaded to this account!
       </p>
     {% else %}
+      {{ request.user }}
+      {{ request.user.openhumansuser }}
+      {{ request.user.openhumansuser.is_connected }}
       <hr>
       <h4>Export to Open Humans</h4>
+      {% if not request.user.openhumansuser.is_connected %}
       <p>
         Click the link below to start the data export process to an Open
         Humans account.
@@ -85,6 +89,14 @@
       <a href="{{ site.openhumansconfig.auth_url }}">
         Export data to Open Humans
       </a>
+      {% else %}
+      <p>Congrats! Your data is connected to Open Humans.</p>
+      <p>
+        <small>You can remove this connection on your
+          <a href="{{ site.openhumansconfig.removal_url }}">
+            Open Humans connections page</a>.</small>
+      </p>
+      {% endif %}
     {% endif %}
   {% endif %}
 

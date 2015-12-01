@@ -13,6 +13,10 @@ from storages.backends.s3boto import S3BotoStorage
 User = settings.AUTH_USER_MODEL
 
 
+class UnauthorizedTokenError(Exception):
+    pass
+
+
 @deconstructible
 class MyS3BotoStorage(S3BotoStorage):
     pass
@@ -69,6 +73,15 @@ class OpenHumansConfig(models.Model):
         return '{}/study/{}/return/'.format(
             settings.OPEN_HUMANS_SERVER, self.source_name)
 
+    @property
+    def userdata_url(self):
+        return '{}/api/{}/user-data/'.format(
+            settings.OPEN_HUMANS_SERVER, self.source_name)
+
+    @property
+    def removal_url(self):
+        return '{}/member/me/connections/'.format(settings.OPEN_HUMANS_SERVER)
+
 
 class OpenHumansUser(models.Model):
     """
@@ -91,6 +104,9 @@ class OpenHumansUser(models.Model):
                 'client_id': settings.OPEN_HUMANS_CLIENT_ID,
                 'client_secret': settings.OPEN_HUMANS_CLIENT_SECRET,
             })
+
+        if response_refresh.status_code == 401:
+            raise UnauthorizedTokenError(Exception)
 
         token_data = response_refresh.json()
 
@@ -120,5 +136,23 @@ class OpenHumansUser(models.Model):
             self._refresh_tokens()
         return self.access_token
 
+    def is_connected(self):
+        """
+        Return true if access token is working, indicating user is connected.
+        """
+        site = Site.objects.get_current()
+        try:
+            check_data = requests.get(
+                site.openhumansconfig.userdata_url,
+                headers={'Content-type': 'application/json',
+                         'Authorization':
+                         'Bearer {}'.format(self.get_access_token())})
+            if check_data.status_code == 200:
+                return True
+        except UnauthorizedTokenError:
+            return False
+        return False
+
     def __unicode__(self):
-        return '{} OpenHumans:{}'.format(self.user.email, self.openhumans_userid)
+        return '{} OpenHumans:{}'.format(self.user.email,
+                                         self.openhumans_userid)
