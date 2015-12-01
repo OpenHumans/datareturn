@@ -1,5 +1,6 @@
 import csv
 import datetime
+import json
 
 from allauth.account.utils import user_pk_to_url_str, url_str_to_user_pk
 
@@ -13,6 +14,7 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 from django.views.generic import RedirectView, TemplateView, View
 
 import requests
@@ -132,18 +134,27 @@ class AuthorizeOpenHumansView(RedirectView):
 
             ohuser.access_token = token_data['access_token']
             ohuser.refresh_token = token_data['refresh_token']
-
             ohuser.token_expiration = (
-                datetime.datetime.now() +
+                timezone.now() +
                 datetime.timedelta(seconds=token_data['expires_in']))
 
             ohuser.save()
 
-            messages.success(request, 'Open Humans connection completed.')
-
-            # TODO: Push data to Open Humans.
+            site = Site.objects.get_current()
+            requests.patch(
+                site.openhumansconfig.userdata_url,
+                data=json.dumps({
+                    'data': {
+                        'file-label': 'url-goes-here'
+                    }
+                }),
+                headers={'Content-type': 'application/json',
+                         'Authorization':
+                         'Bearer {}'.format(ohuser.get_access_token())})
 
             site = Site.objects.get_current()
+
+            messages.success(request, 'Open Humans connection completed.')
 
             return HttpResponseRedirect(site.openhumansconfig.return_url)
 
