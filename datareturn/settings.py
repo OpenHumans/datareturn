@@ -149,15 +149,15 @@ if os.getenv('HEROKU_SETUP') in ['true', 'True']:
     # Allow all host headers
     ALLOWED_HOSTS = ['*']
 
-# Email set up.
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', global_settings.EMAIL_BACKEND)
-if os.getenv('EMAIL_USE_TLS') in ['true', 'True']:
-    EMAIL_USE_TLS = True
-else:
-    EMAIL_USE_TLS = global_settings.EMAIL_USE_TLS
-EMAIL_HOST = os.getenv('EMAIL_HOST', global_settings.EMAIL_HOST)
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', global_settings.EMAIL_HOST_USER)
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD',
-                                global_settings.EMAIL_HOST_PASSWORD)
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', str(global_settings.EMAIL_PORT)))
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', global_settings.DEFAULT_FROM_EMAIL)
+    # Email set up.
+    EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', global_settings.EMAIL_BACKEND)
+    if os.getenv('EMAIL_USE_TLS') in ['true', 'True']:
+        EMAIL_USE_TLS = True
+    else:
+        EMAIL_USE_TLS = global_settings.EMAIL_USE_TLS
+    EMAIL_HOST = os.getenv('EMAIL_HOST', global_settings.EMAIL_HOST)
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', global_settings.EMAIL_HOST_USER)
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD',
+                                    global_settings.EMAIL_HOST_PASSWORD)
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT', str(global_settings.EMAIL_PORT)))
+    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', global_settings.DEFAULT_FROM_EMAIL)

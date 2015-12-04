@@ -19,7 +19,8 @@ from django.views.generic import RedirectView, TemplateView, View
 
 import requests
 
-from datareturn.models import DataFile, OpenHumansUser
+from datareturn.models import (DataFile, LoggedUserEvent,
+                               OpenHumansUser)
 
 User = get_user_model()
 
@@ -48,6 +49,9 @@ class TokenLoginView(View):
         if user:
             login(request, user)
             login_url = reverse('home')
+            LoggedUserEvent(
+                user=user,
+                description='Logged in.').save()
             return HttpResponseRedirect(login_url)
         failed_login_url = reverse('token_login_fail')
         return HttpResponseRedirect(failed_login_url)
@@ -108,6 +112,7 @@ class UserTokensCSVView(View):
 
 class AuthorizeOpenHumansView(RedirectView):
     pattern_name = 'home'
+    permanent = False
 
     @staticmethod
     def _exchange_code(code):
@@ -123,12 +128,21 @@ class AuthorizeOpenHumansView(RedirectView):
                 'redirect_uri': settings.OPEN_HUMANS_REDIRECT_URI,
             })
 
-        return token_response.json()
+        if token_response.status_code == 200:
+            return token_response.json()
+        return None
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
+        site = Site.objects.get_current()
+
         if 'code' in request.GET:
             token_data = self._exchange_code(request.GET['code'])
+
+            if not token_data:
+                messages.error(request, 'Failed to retrieve token from Open Humans!')
+                return super(AuthorizeOpenHumansView, self).get(
+                    request, *args, **kwargs)
 
             ohuser, _ = OpenHumansUser.objects.get_or_create(user=request.user)
 
@@ -140,7 +154,6 @@ class AuthorizeOpenHumansView(RedirectView):
 
             ohuser.save()
 
-            site = Site.objects.get_current()
             requests.patch(
                 site.openhumansconfig.userdata_url,
                 data=json.dumps({
@@ -152,6 +165,9 @@ class AuthorizeOpenHumansView(RedirectView):
 
             site = Site.objects.get_current()
 
+            LoggedUserEvent(
+                user=request.user,
+                description='Connected Open Humans.').save()
             messages.success(request, 'Open Humans connection completed.')
 
             return HttpResponseRedirect(site.openhumansconfig.return_url)

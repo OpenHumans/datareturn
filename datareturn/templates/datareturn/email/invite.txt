@@ -1,0 +1,22 @@
+{% autoescape off %}{% if site.siteconfig.invite_email_content %}
+{{ site.siteconfig.invite_email_content }}
+{% else %}
+Thank you for being part of {{ site.siteconfig.source_name }}!
+
+We want to give you access to your raw data from our project. This is the
+same data the researchers have, fairly technical files containing a lot of
+data. It might not be useful to you, but we wanted to give you access to
+everything we have - as a thank you for your contribution!
+
+If you're a member of Open Humans, you can also connect your data to an Open
+Humans account. Open Humans is a free, non-profit site where study participants
+can aggregate their data from studies, participate in new studies, and
+potentially connect to other participants. You can read more about it on their
+website: https://openhumans.org
+
+To open your data account, click here: {% endif %}{{ login_url }}
+
+Sincerely,
+
+The {{ site.siteconfig.source_name }} team
+{{ site.domain }}{% endautoescape %}

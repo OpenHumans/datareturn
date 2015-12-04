@@ -75,9 +75,6 @@
         Sorry, no data seems to be loaded to this account!
       </p>
     {% else %}
-      {{ request.user }}
-      {{ request.user.openhumansuser }}
-      {{ request.user.openhumansuser.is_connected }}
       <hr>
       <h4>Export to Open Humans</h4>
       {% if not request.user.openhumansuser.is_connected %}

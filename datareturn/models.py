@@ -66,7 +66,10 @@ class SiteConfig(models.Model):
     Site configuration, customize with additional information and descriptions.
     """
     site = models.OneToOneField(Site)
+    source_name = models.TextField(default='')
     data_page_explanation = models.TextField(default='')
+    invite_email_subject = models.TextField(default='', blank=True)
+    invite_email_content = models.TextField(default='', blank=True)
 
 
 class OpenHumansConfig(models.Model):
@@ -190,3 +193,13 @@ class OpenHumansUser(models.Model):
     def __unicode__(self):
         return '{} OpenHumans:{}'.format(self.user.email,
                                          self.openhumans_userid)
+
+
+class LoggedUserEvent(models.Model):
+    user = models.ForeignKey(User)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    description = models.TextField()
+
+    def __unicode__(self):
+        return '{} {}: {}'.format(
+            str(self.timestamp), self.user.username, self.description)
