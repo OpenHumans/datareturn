@@ -45,7 +45,7 @@ class TokenLoginView(View):
         uidb36 = kwargs['uidb36']
         token = kwargs['token']
         self.reset_user = self._get_user(uidb36)
-        user = authenticate(username=self.reset_user, token=token)
+        user = authenticate(username=self.reset_user.username, token=token)
         if user:
             login(request, user)
             login_url = reverse('home')
