@@ -24,8 +24,14 @@ which is how you'll store your private AWS keys.
   and the corresponding `apps.py`).
 * Follow instructions for ["Loading files into S3"](https://github.com/PersonalGenomesOrg/datareturn#loading-files-into-s3)
 * Create user accounts with associated data by running: `foreman run python manage.py load_data`
-* You can download a CSV listing your users (by email address) and a fresh set of associated login tokens by visiting `/admin/user_tokens`. This is useful for sending
-out an email notifying these individuals of their new accounts and data.
+  * (Or if the site is on Heroku, you do: `heroku run python manage.py load_data`)
+* To invite users to their data accounts...
+  * You can use the `send_invites` management command. The email subject and
+  content can be customized in the SiteConfig object.
+  * Or you can download a CSV listing your users (by email address) and a fresh
+  set of associated login tokens by visiting `/admin/user_tokens`. These tokens
+  can be incorporated via mail merge software.
+
 
 ### Loading files into S3
 
