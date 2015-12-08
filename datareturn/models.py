@@ -67,7 +67,9 @@ class SiteConfig(models.Model):
     """
     site = models.OneToOneField(Site)
     source_name = models.TextField(default='')
-    data_page_explanation = models.TextField(default='')
+    data_page_intro = models.TextField(default='', blank=True)
+    data_page_open_humans = models.TextField(default='', blank=True)
+    data_page_data_section = models.TextField(default='', blank=True)
     invite_email_subject = models.TextField(default='', blank=True)
     invite_email_content = models.TextField(default='', blank=True)
 
