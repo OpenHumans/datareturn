@@ -8,6 +8,26 @@ import sys
 from boto.s3.connection import S3Connection
 
 
+def override_content_type(filepath):
+    """
+    Override with MIME type 'application/octet-stream' for compressed files.
+
+    S3 tries to assign a MIME type, and some browsers are "helping" for
+    specific MIME types. For example:
+      - 'foo.csv.bz2' is automatically assigned 'text/csv', browser renames the
+        downloaded file to 'foo.csv'.
+      - 'foo.csv.bz2' set to type 'application/x-bzip2', browser renames the
+        downloaded file to 'foo.bz2'.
+
+    Setting to 'application/octet-stream' should block all these "smart"
+    behaviors some browsers are attempting based on Content-Type header data.
+    """
+    if (filepath.endswith('.bz2') or filepath.endswith('.gz') or
+            filepath.endswith('.zip')):
+        return 'application/octet-stream'
+    return None
+
+
 def hashfile(filepath):
     sha1 = hashlib.sha1()
     f = open(filepath, 'rb')
@@ -57,6 +77,12 @@ def load_local(file_list, local_filedir, bucket):
         filepath = os.path.join(local_filedir, fileinfo[2])
         s3_path = os.path.join('datareturn', hashfile(filepath), fileinfo[3])
         key = bucket.new_key(s3_path)
+        content_type = override_content_type(s3_path)
+        if content_type:
+            print "Overriding content type for {} with {}".format(s3_path, content_type)
+            key.set_metadata('Content-Type', content_type)
+        else:
+            print "Not overriding content type for {}".format(s3_path)
         key.set_contents_from_filename(filepath)
         fileinfo[2] = s3_path
         list_update_csv.writerow(fileinfo)
