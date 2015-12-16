@@ -19,4 +19,10 @@ To open your data account, click here: {% endif %}{{ login_url }}
 Sincerely,
 
 The {{ site.siteconfig.source_name }} team
-{{ site.domain }}{% endautoescape %}
+{{ site.domain }}
+{% if site.siteconfig.invite_email_postscript %}
+
+-----
+
+{{ site.siteconfig.invite_email_postscript }}
+{% endif %}{% endautoescape %}

@@ -72,6 +72,7 @@ class SiteConfig(models.Model):
     data_page_data_section = models.TextField(default='', blank=True)
     invite_email_subject = models.TextField(default='', blank=True)
     invite_email_content = models.TextField(default='', blank=True)
+    invite_email_postscript = models.TextField(default='', blank=True)
 
 
 class OpenHumansConfig(models.Model):
