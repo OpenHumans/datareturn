@@ -40,7 +40,7 @@ class DataFile(models.Model):
     datafile = models.FileField(
         storage=MyS3BotoStorage(acl='private',
                                 querystring_auth=True,
-                                querystring_expire=600))
+                                querystring_expire=239200))
     description = models.TextField(default='')
 
     @property
