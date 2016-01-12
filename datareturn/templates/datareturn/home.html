@@ -141,15 +141,19 @@
 
 {# Not authenticated. #}
 {% else %}
-<p>
-  Welcome to our data return site.
-<p>If we've returned data to you, you can access it by logging in
-  <a href="{% url 'account_reset_password' %}">with a login link</a>.
-</p>
-<a class="btn btn-lg btn-primary" href="{% url 'account_reset_password' %}"
-    style="margin-top:10px">
-  Get a login link</a>
-
+  {% if site.siteconfig.home_page_summary %}
+    {{ site.siteconfig.home_page_summary|markdown }}
+  {% else %}
+    <p>
+      Welcome to our data return site!
+    </p>
+  {% endif %}
+  <p>If we've returned data to you, you can access it by logging in
+    <a href="{% url 'account_reset_password' %}">with a login link</a>.
+  </p>
+  <a class="btn btn-lg btn-primary" href="{% url 'account_reset_password' %}"
+      style="margin-top:10px">
+    Get a login link</a>
 {% endif %}
 
 {% endblock %}

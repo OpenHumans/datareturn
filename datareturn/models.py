@@ -67,6 +67,7 @@ class SiteConfig(models.Model):
     """
     site = models.OneToOneField(Site)
     source_name = models.TextField(default='')
+    home_page_summary = models.TextField(default='', blank=True)
     data_page_intro = models.TextField(default='', blank=True)
     data_page_open_humans = models.TextField(default='', blank=True)
     data_page_data_section = models.TextField(default='', blank=True)
